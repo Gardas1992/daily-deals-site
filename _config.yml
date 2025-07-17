@@ -1,0 +1,6 @@
+title: Daily Deals
+description: Automatically updated affiliate deals
+baseurl: ""
+url: "https://<your-username>.github.io"
+plugins:
+  - jekyll-feed
