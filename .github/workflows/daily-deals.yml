@@ -1,0 +1,28 @@
+name: Daily Deals
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install axios
+      - run: node fetch-deals.js
+        env:
+          AMZ_TOKEN: ${{ secrets.AMZ_TOKEN }}
+          AMZ_TAG: ${{ secrets.AMZ_TAG }}
+          CJ_KEY: ${{ secrets.CJ_KEY }}
+          CJ_WEBSITE: ${{ secrets.CJ_WEBSITE }}
+      - run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add posts/*.md
+          git commit -m "Daily deals update - ${{ github.run_id }}" || echo "No changes"
+          git push
